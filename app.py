@@ -21,17 +21,18 @@ class HexLiteTranslator:
                 else:
                     encoded_chars.append(char)
             encoded_words.append(".".join(encoded_chars))
-        return "/ ".join(encoded_words)
+        # FIXED: Joined directly with a slash and no spaces
+        return "/".join(encoded_words)
 
     def decode(self, text, shift=0):
-        # Splits words by slash and trailing space safely
-        encoded_words = text.split("/ ")
+        # FIXED: Splits strictly by a forward slash character
+        encoded_words = text.strip().split("/")
         decoded_words = []
         for encoded_word in encoded_words:
             tokens = encoded_word.split(".")
             decoded_chars = []
             for token in tokens:
-                # FIXED: Separates the two digits properly (e.g., '1' and '8' from '18')
+                # FIXED: Indexes token[0] and token[1] directly to prevent coordinate merging
                 if len(token) == 2 and token.isdigit():
                     g_idx = int(token[0]) - 1
                     p_idx = int(token[1]) - 1
