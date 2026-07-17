@@ -24,12 +24,14 @@ class HexLiteTranslator:
         return "/ ".join(encoded_words)
 
     def decode(self, text, shift=0):
+        # Splits words by slash and trailing space safely
         encoded_words = text.split("/ ")
         decoded_words = []
         for encoded_word in encoded_words:
             tokens = encoded_word.split(".")
             decoded_chars = []
             for token in tokens:
+                # FIXED: Separates the two digits properly (e.g., '1' and '8' from '18')
                 if len(token) == 2 and token.isdigit():
                     g_idx = int(token[0]) - 1
                     p_idx = int(token[1]) - 1
@@ -47,7 +49,6 @@ translator = HexLiteTranslator()
 st.title("HexLite Secret Cipher Portal")
 st.write("Convert your custom coordinates and text instantly.")
 
-# Interactive dropdowns and configuration options
 mode = st.selectbox("Choose Mode", ["Encode (Text to Code)", "Decode (Code to Text)"])
 shift = st.number_input("Shift Key Number", min_value=0, value=0, step=1)
 message = st.text_area("Enter your message here")
@@ -63,5 +64,4 @@ if st.button("Process Message"):
             result = translator.decode(message, shift)
             st.success("Your Decoded Result:")
         
-        # Displays the result inside a clean copy-paste container box
         st.code(result)
